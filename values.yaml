@@ -1,0 +1,5 @@
+my-microservice-1:
+  image: foo
+
+my-microservice-2:
+  image: bar

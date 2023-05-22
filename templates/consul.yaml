@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul-deployment
+  template:
+    metadata:
+      labels:
+        app: consul-deployment
+    spec:
+      containers:
+      - name: consul-deployment
+        image: hashicorp/consul:1.11.2
+        ports:
+        - containerPort: 8500
+        env:
+            - name: NODE_ENV
+              value: production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8500
+  selector:
+    app: consul-deployment
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8500
+    nodePort: 30009
+  selector:
+    app: consul-deployment
